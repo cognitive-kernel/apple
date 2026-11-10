@@ -2,7 +2,7 @@
   "source_repository": "https://github.com/hanakim3945/bl_sbx",
   "source_branch": "main",
   "source_tree_commit": "4832e5b6ecca0a0983492b8807148204e1162a2f",
-  "tested_model": "iPhone12,1",
+  "tested_model": "iPhone13,2",
   "tested_ios_version": "26.0.1",
   "claimed_upper_range": "26.2 beta 1",
   "published_outcome": "mobile-owned file write and MobileGestalt cache modification",
