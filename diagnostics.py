@@ -110,6 +110,17 @@ $services = @(Get-Service |
         return {"available": False, "error": "InvalidPowerShellOutput"}
 
 
+def resolve_apple_tool(name: str) -> str | None:
+    found = shutil.which(name)
+    if found:
+        return found
+    root = Path(__file__).resolve().parent
+    suffix = ".exe" if platform.system() == "Windows" else ""
+    candidates = (root / "tools" / "libimobiledevice" / f"{name}{suffix}",
+                  root.parent / "tools" / "libimobiledevice" / f"{name}{suffix}")
+    return next((str(candidate) for candidate in candidates if candidate.is_file()), None)
+
+
 def collect() -> dict[str, Any]:
     is_windows = platform.system() == "Windows"
     optional = ("ideviceinfo", "idevice_id", "irecovery")
@@ -120,7 +131,8 @@ def collect() -> dict[str, Any]:
                  "architecture": platform.machine(), "windows": is_windows},
         "tools": {"python": run_command([shutil.which("python") or "python", "--version"]),
                   "git": run_command([shutil.which("git") or "git", "--version"]),
-                  "apple_cli": {name: {"available": shutil.which(name) is not None}
+                  "apple_cli": {name: {"available": resolve_apple_tool(name) is not None,
+                                      "path": resolve_apple_tool(name)}
                                 for name in optional}},
         "apple_usb": collect_windows_devices() if is_windows else
                      {"available": False, "error": "WindowsOnly"},
