@@ -43,6 +43,7 @@ py -3 -m unittest discover -s tests -v
 
 - `research/cve-2025-43534-attribution.md` records Apple's CVE attribution and separates vendor-confirmed facts from researcher statements.
 - `research/bl-sbx-compatibility.md` assesses the separate public PoC against the target device.
+- `research/target-investigation-log.md` is the continuity record for this iPhone 16 case: prior checks, reported results, completed repository tests, reviewed PoCs, evidence gaps, and the rule against repeating diagnostics without a new reason.
 
 ## Research boundaries
 
