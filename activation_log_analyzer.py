@@ -18,18 +18,18 @@ PATTERNS = [
     ("activation_task", re.compile(r"arbitrary data task|activation task", re.I)),
     ("activation_cancel", re.compile(r"Canceling any in-flight activation|cancel.*activation", re.I)),
     ("activation_success_marker", re.compile(r"ActivationRecord|ActivationState.*Activated|activation.*success", re.I)),
-    ("activation_failure_marker", re.compile(r"activation.*(failed|failure|error)|HTTP.*[45]\\d\\d", re.I)),
-    ("http_status", re.compile(r"HTTP[^\\r\\n]{0,40}\\b([1-5]\\d\\d)\\b", re.I)),
+    ("activation_failure_marker", re.compile(r"activation.*(failed|failure|error)|HTTP.*[45]\d\d", re.I)),
+    ("http_status", re.compile(r"HTTP[^\r\n]{0,40}\b([1-5]\d\d)\b", re.I)),
     ("tls_or_trust", re.compile(r"trustd|TLS|SSL|certificate", re.I)),
     ("dns_or_network", re.compile(r"DNS|resolve|timed out|network is down|not connected", re.I)),
     ("account_service", re.compile(r"FMFError|NoAccount|account.*locked", re.I)),
 ]
 
 REDACTIONS = [
-    (re.compile(r"(?i)\\b[a-f0-9]{40}\\b"), "[REDACTED_HEX_ID]"),
-    (re.compile(r"(?i)\\b[0-9a-f]{8}-[0-9a-f-]{27,}\\b"), "[REDACTED_UUID]"),
-    (re.compile(r"(?i)\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b"), "[REDACTED_EMAIL]"),
-    (re.compile(r"(?<!\\d)(?:\\d[ -]?){14,20}(?!\\d)"), "[REDACTED_LONG_NUMBER]"),
+    (re.compile(r"(?i)\b[a-f0-9]{40}\b"), "[REDACTED_HEX_ID]"),
+    (re.compile(r"(?i)\b[0-9a-f]{8}-[0-9a-f-]{27,}\b"), "[REDACTED_UUID]"),
+    (re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"), "[REDACTED_EMAIL]"),
+    (re.compile(r"(?<!\d)(?:\d[ -]?){14,20}(?!\d)"), "[REDACTED_LONG_NUMBER]"),
 ]
 
 
@@ -61,7 +61,7 @@ def analyze_text(text: str) -> dict[str, Any]:
     http_codes = sorted({
         match.group(1)
         for line in text.splitlines()
-        for match in re.finditer(r"HTTP[^\\r\\n]{0,40}\\b([1-5]\\d\\d)\\b", line, re.I)
+        for match in re.finditer(r"HTTP[^\r\n]{0,40}\b([1-5]\d\d)\b", line, re.I)
     })
     has_success = counts["activation_success_marker"] > 0
     has_failure = counts["activation_failure_marker"] > 0
@@ -106,7 +106,7 @@ def main() -> int:
     except OSError as exc:
         parser.error(str(exc))
     report = analyze_text(raw)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n",
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n",
                            encoding="utf-8")
     print(f"Analysis written to: {args.output.resolve()}")
     print(f"Matched {report['summary']['matched_lines']} lines; "
