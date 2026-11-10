@@ -10,6 +10,7 @@ for investigating an iPhone that is stuck at Activation Lock.
 | `diagnostics.py` | Collects Windows Apple USB/PnP and local tool diagnostics |
 | `cve_scope.py` | Checks device model/version against the published CVE-2025-43534 scope |
 | `target_assessment.py` | Combines vendor advisory applicability with published PoC test evidence; explicitly reports when no validated Activation Lock solution is demonstrated |
+| `ipsw_inspect.py` | Reads an IPSW BuildManifest.plist, hashes the archive, and compares model/version/build without extracting or installing firmware |
 | `snapshot_diff.py` | Compares two device snapshots and reports observed property changes |
 | `activation_snapshot.py` | Captures selected activation/baseband/SIM properties without collecting serial, UDID, or ECID |
 | `activation_log_analyzer.py` | Analyzes an already-captured iOS syslog offline and identifies activation-related evidence |
@@ -21,12 +22,15 @@ for investigating an iPhone that is stuck at Activation Lock.
 From the repository directory:
 
 ```powershell
+py -3 ipsw_inspect.py .\iPhone17,3_18.3.2_22D82_Restore.ipsw --output ipsw-report.json
 py -3 activation_snapshot.py --output activation-snapshot.json
 py -3 target_assessment.py .\activation-snapshot.json --output target-assessment.json
 py -3 diagnostics.py --output iphone-diagnostics.json
 py -3 activation_log_analyzer.py .\activation-filtered.log --output activation-log-analysis.json
 py -3 poc_audit.py .\research-bundle.zip --output poc-audit.json
 ```
+
+The IPSW inspector reads only the root `BuildManifest.plist`, computes a full-file SHA-256, and never extracts or installs firmware. A matching manifest is not cryptographic proof that Apple signed the archive. It does not check TSS signing status. The tool is for offline evidence validation only; do not select Restore or Update as part of this inspection.
 
 The tools write JSON reports. Review and redact reports before sharing them.
 
