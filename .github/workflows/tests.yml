@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - feat/windows-iphone-diagnostics
+      - feat/cve-2025-43534-scope-check
   pull_request:
     branches:
       - main
+      - feat/windows-iphone-diagnostics
 
 jobs:
   unit-tests:
@@ -26,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Compile Python files
-        run: python -m compileall -q diagnostics.py tests
+        run: python -m compileall -q diagnostics.py cve_scope.py tests
 
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
