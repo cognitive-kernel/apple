@@ -65,7 +65,7 @@ def audit_directory(root: Path) -> list[dict[str, Any]]:
 
 
 def _unsafe_zip_name(name: str) -> bool:
-    normalized = name.replace("\\\\", "/")
+    normalized = name.replace("\\", "/")
     path = PurePosixPath(normalized)
     return (normalized.startswith("/") or
             any(part == ".." for part in path.parts) or
