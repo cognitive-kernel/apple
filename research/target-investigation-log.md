@@ -134,6 +134,7 @@ Never convert an advisory match, USB pairing, AFC availability, a log keyword, o
 - **Secondary-catalog observation, not a fresh device capture:** the catalog lists iPhone 16 / iPhone17,3 / iOS 18.3.2 / build 22D82, filename iPhone17,3_18.3.2_22D82_Restore.ipsw, and SHA-256 563605a932de2643bc4dcec6f312a0a0e9411cf07900a7187edb2669cb948247.
 - The same catalog reports this IPSW is no longer signed. This is a secondary-source observation, not a live Apple TSS query.
 - Source: https://ipsw.me/download/iPhone17%2C3/22D82/
+- The download link redirects to Apple's CDN: https://updates.cdn-apple.com/2025WinterFCS/fullrestores/082-03679/DA16409C-A02F-46E9-ADE9-ED32BDD47539/iPhone17%2C3_18.3.2_22D82_Restore.ipsw. The SHA-256 above is the secondary catalog's checksum; it is not an Apple digital signature.
 - **Safety decision:** do not attempt Restore, Update, downgrade, or firmware installation. The project only needs offline metadata inspection.
 
 ### New project code
@@ -176,8 +177,8 @@ Never convert an advisory match, USB pairing, AFC availability, a log keyword, o
 
 ## 10. CI validation update (2026-11-10)
 
-- GitHub Actions run 42832998621 (run #53) was started for the branch head containing both new utilities.
-- All six matrix jobs completed the Python compilation and unit-test steps successfully. Five jobs were reported completed/success by the jobs endpoint; the Windows/Python 3.10 job log also shows the test step completed with **40 tests, OK**. Its job-level status was still displayed as in-progress during the final status poll, so the run-level conclusion should be rechecked before treating the entire workflow as fully completed.
+- GitHub Actions run 42832998621 (run #53) completed successfully for the branch head containing both new utilities.
+- The workflow run is now completed with conclusion **success**. All six Ubuntu/Windows × Python 3.10/3.11/3.12 jobs passed compilation and unit tests. The Windows/Python 3.10 job log reports **40 tests, OK**.
 - The Windows/Python 3.10 job log includes the five IPSW inspector tests and reports 40 total tests passing.
 - Separate local focused verification passed all 10 tests for ipsw_inspect.py and activation_preflight.py.
 - This is GitHub Actions evidence, not a test performed against the physical iPhone or a real 8.8 GiB IPSW. No firmware file was downloaded, no restore was attempted, and the device was not modified.
