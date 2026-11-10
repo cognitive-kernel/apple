@@ -48,9 +48,10 @@ def evaluate_preflight(
     ipsw_checks = ipsw_report.get("checks", {})
     ipsw_matches = ipsw_checks.get("inspection_passed") is True
     ipsw_target = ipsw_report.get("expected_target", {})
-    ipsw_target_matches = all(
-        ipsw_target.get(key) == expected[key]
-        for key in ("product_type", "product_version", "product_build_version")
+    ipsw_target_matches = (
+        ipsw_target.get("product_type") == expected["product_type"]
+        and ipsw_target.get("product_version") == expected["product_version"]
+        and ipsw_target.get("product_build_version") == expected["build_version"]
     )
 
     checks = {
