@@ -9,6 +9,7 @@ for investigating an iPhone that is stuck at Activation Lock.
 |---|---|
 | `diagnostics.py` | Collects Windows Apple USB/PnP and local tool diagnostics |
 | `cve_scope.py` | Checks device model/version against the published CVE-2025-43534 scope |
+| `snapshot_diff.py` | Compares two device snapshots and reports observed property changes |
 | `activation_snapshot.py` | Captures selected activation/baseband/SIM properties without collecting serial, UDID, or ECID |
 | `activation_log_analyzer.py` | Analyzes an already-captured iOS syslog offline and identifies activation-related evidence |
 | `poc_compatibility.py` | Compares a read-only device snapshot with the public PoC's published test environment |
