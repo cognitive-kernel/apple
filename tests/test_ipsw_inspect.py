@@ -55,7 +55,9 @@ class IpswInspectTests(unittest.TestCase):
             report = inspect_ipsw(path, expected_sha256=expected)
             mismatch = inspect_ipsw(path, expected_sha256="0" * 64)
         self.assertTrue(report["checks"]["expected_sha256_matches"])
+        self.assertTrue(report["checks"]["inspection_passed"])
         self.assertFalse(mismatch["checks"]["expected_sha256_matches"])
+        self.assertFalse(mismatch["checks"]["inspection_passed"])
 
     def test_missing_manifest_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
