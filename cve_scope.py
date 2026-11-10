@@ -75,9 +75,13 @@ def main() -> int:
         product_type, product_version = args.product_type, args.product_version
     else:
         executable = shutil.which("ideviceinfo")
-        bundled = Path(__file__).resolve().parent / "tools" / "libimobiledevice" / "ideviceinfo.exe"
-        if not executable and bundled.is_file():
-            executable = str(bundled)
+        root = Path(__file__).resolve().parent
+        bundled_candidates = (root / "tools" / "libimobiledevice" / "ideviceinfo.exe",
+                              root.parent / "tools" / "libimobiledevice" / "ideviceinfo.exe")
+        if not executable:
+            bundled = next((candidate for candidate in bundled_candidates if candidate.is_file()), None)
+            if bundled:
+                executable = str(bundled)
         if not executable:
             print("ERROR: ideviceinfo not found.", file=sys.stderr)
             return 2
