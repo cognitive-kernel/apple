@@ -9,7 +9,7 @@ class ActivationSnapshotTests(unittest.TestCase):
         with patch("activation_snapshot.read_key", return_value={"available": True, "value": "x"}) as read:
             report = activation_snapshot.collect(executable="ideviceinfo")
         self.assertEqual(set(report["properties"]), set(activation_snapshot.SAFE_KEYS))
-        self.assertTrue(report["privacy"]["udid_included"] is False)
+        self.assertFalse(report["privacy"]["udid_included"])
         self.assertTrue(report["safety"]["read_only"])
         self.assertEqual(read.call_count, len(activation_snapshot.SAFE_KEYS))
 
@@ -24,9 +24,11 @@ class ActivationSnapshotTests(unittest.TestCase):
         self.assertNotIn("UniqueChipID", command)
 
     def test_finds_ideviceinfo_in_sibling_tools_directory(self):
-        with patch("activation_snapshot.shutil.which", return_value=None), \\
-             patch("activation_snapshot.Path.is_file", return_value=True), \\
-             patch("activation_snapshot.read_key", return_value={"available": True, "value": "x"}):
+        with (
+            patch("activation_snapshot.shutil.which", return_value=None),
+            patch("activation_snapshot.Path.is_file", return_value=True),
+            patch("activation_snapshot.read_key", return_value={"available": True, "value": "x"}),
+        ):
             report = activation_snapshot.collect()
         self.assertTrue(report["safety"]["read_only"])
 
