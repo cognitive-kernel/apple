@@ -115,6 +115,10 @@ def inspect_ipsw(
             "manifest_consistent_with_target": (
                 product_match and version_match and build_match
             ),
+            "inspection_passed": (
+                product_match and version_match and build_match
+                and (expected_sha256 is None or checksum_match is True)
+            ),
         },
         "trust": {
             "apple_signature_verified": False,
@@ -161,7 +165,7 @@ def main() -> int:
         print(f"Report written to: {args.output.resolve()}")
     else:
         print(rendered, end="")
-    return 0 if report["checks"]["manifest_consistent_with_target"] else 1
+    return 0 if report["checks"]["inspection_passed"] else 1
 
 
 if __name__ == "__main__":
