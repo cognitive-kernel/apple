@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -100,7 +101,11 @@ def main() -> int:
     else:
         executable = shutil.which("ideviceinfo")
         if not executable:
-            print("ERROR: ideviceinfo was not found in PATH.", file=sys.stderr)
+            bundled = (Path(__file__).resolve().parent.parent / "tools" / "libimobiledevice" / "ideviceinfo.exe")
+            if bundled.is_file():
+                executable = str(bundled)
+        if not executable:
+            print("ERROR: ideviceinfo was not found in PATH or sibling tools/libimobiledevice.", file=sys.stderr)
             return 2
         try:
             product_type = read_device_value(executable, "ProductType", args.udid)
