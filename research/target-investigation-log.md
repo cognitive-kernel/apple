@@ -153,3 +153,22 @@ Never convert an advisory match, USB pairing, AFC availability, a log keyword, o
 2. Review the inspector source and test results for cross-platform behavior.
 3. Only after CI succeeds, use the tool against a locally obtained IPSW file if the user already has one; do not ask for another device snapshot or repeat USB diagnostics.
 4. Continue the read-only activation architecture and researcher-material review. No exploitability claim is made.
+
+
+## 8. Non-invasive device-test preflight (2026-11-10)
+
+- Added activation_preflight.py to combine the existing privacy-minimized activation snapshot with the IPSW inspector report.
+- The preflight checks exact ProductType, ProductVersion, BuildVersion, Unactivated state, read-only snapshot flag, identifier-exclusion flags, IPSW manifest/checksum result, and matching expected target.
+- A passing result authorizes only the next scope of read-only observation. It does not enable or authorize exploit execution, firmware changes, filesystem writes, activation-record changes, or Activation Lock modification.
+- Added tests/test_activation_preflight.py for a matching case, mismatched build, unknown activation state, failed IPSW checksum status, and identifier inclusion.
+- README now documents both IPSW inspection and preflight commands.
+- Commits: 16c92f9b69b8911e21a2e021de89ffae2b028359 (initial preflight), 1a9151f765b04758acf3d1d4ba38c4773b7d1ce4 (schema correction), 4f813b3126b7978ac99a2794a592d6287ccae7ce (tests), 0803fff41aa1493ed34e7e63d0c4ebad1be23ebd (test schema correction), 8169e2d2cc06771a45b1dcae6cfadbfea672bcbf (README).
+- GitHub Actions run 42832944559 (run #51) was pending for the commit that included the preflight code when last checked. Do not claim it passed until all six matrix jobs finish.
+
+## 9. Updated researcher evidence (2026-11-10)
+
+- The credited researcher's portfolio (https://ig0x72.dev/) describes CVE-2025-43534 as an iOS sandbox escape in itunesstored, involving malicious SQLite database manipulation and arbitrary file writes outside the app sandbox; the page lists Activation Lock bypass as impact.
+- The linked article (https://ig0x72.dev/posts/wip.html) remained marked "Work in Progress" at review time. No detailed public reproduction steps or validated iPhone17,3 / iOS 18.3.2 test result were available there.
+- The researcher's GitHub profile (https://github.com/iG0x72) showed three public repositories at review time; none was identified from the visible repository list as a published CVE-2025-43534 reproduction.
+- This is a **Researcher-claimed** description, not an independently reproduced exploit.
+- The bl_sbx artifact remains separate: the thematic overlap is noted, but no direct attribution or proof that it is the CVE implementation has been established.
