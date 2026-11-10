@@ -18,7 +18,7 @@ PATTERNS = [
     ("activation_task", re.compile(r"arbitrary data task|activation task", re.I)),
     ("activation_cancel", re.compile(r"Canceling any in-flight activation|cancel.*activation", re.I)),
     ("activation_success_marker", re.compile(r"ActivationRecord|ActivationState.*Activated|activation.*success", re.I)),
-    ("activation_failure_marker", re.compile(r"activation.*(failed|failure|error)|HTTP.*[45]\d\d", re.I)),
+    ("activation_failure_marker", re.compile(r"activation.{0,100}(failed|failure|denied|rejected|not authorized|invalid)|HTTP.*[4-5]\\d\\d", re.I)),
     ("http_status", re.compile(r"HTTP[^\r\n]{0,40}\b([1-5]\d\d)\b", re.I)),
     ("tls_or_trust", re.compile(r"trustd|TLS|SSL|certificate", re.I)),
     ("dns_or_network", re.compile(r"DNS|resolve|timed out|network is down|not connected", re.I)),
@@ -64,7 +64,7 @@ def analyze_text(text: str) -> dict[str, Any]:
         for match in re.finditer(r"HTTP[^\r\n]{0,40}\b([1-5]\d\d)\b", line, re.I)
     })
     has_success = counts["activation_success_marker"] > 0
-    has_failure = counts["activation_failure_marker"] > 0
+    ("activation_failure_marker", re.compile(r"activation.{0,100}(failed|failure|denied|rejected|not authorized|invalid)|HTTP.*[4-5]\\d\\d", re.I)),
     if http_codes:
         server_observation = "http_status_observed"
     elif has_success:
