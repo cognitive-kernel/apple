@@ -23,6 +23,13 @@ class ActivationSnapshotTests(unittest.TestCase):
         self.assertNotIn("SerialNumber", command)
         self.assertNotIn("UniqueChipID", command)
 
+    def test_finds_ideviceinfo_in_sibling_tools_directory(self):
+        with patch("activation_snapshot.shutil.which", return_value=None), \\
+             patch("activation_snapshot.Path.is_file", return_value=True), \\
+             patch("activation_snapshot.read_key", return_value={"available": True, "value": "x"}):
+            report = activation_snapshot.collect()
+        self.assertTrue(report["safety"]["read_only"])
+
     def test_failed_key_is_nonfatal(self):
         completed = type("Completed", (), {"returncode": 1, "stdout": "", "stderr": "not found"})()
         with patch("activation_snapshot.subprocess.run", return_value=completed):
