@@ -105,7 +105,7 @@ On the user's Windows checkout at `D:\Project\apple\apple`:
 - The assessment explicitly stated read-only/no exploit execution/no device modification.
 
 ### CI status at last recorded check
-The PR's GitHub status endpoint had `total_count=0` and `status=pending`; this was not a CI success. Re-check CI before claiming that the PR passed hosted workflows.
+GitHub Actions run 42832092029 for commit afd55a5d96068e484f912413d4b3d2e682c40472 completed successfully. All six Ubuntu/Windows × Python 3.10/3.11/3.12 jobs passed. This run predates the IPSW inspector and does not validate the new code.
 
 ## 5. Current evidence gaps and next research work
 
@@ -126,3 +126,30 @@ Every new finding must be labeled as one of:
 - **Unknown / not demonstrated** — evidence is insufficient.
 
 Never convert an advisory match, USB pairing, AFC availability, a log keyword, or a cache/file-write demonstration into a claim that Activation Lock was removed. Record negative results and failed hypotheses so they are not repeated.
+
+
+## 7. Follow-up research — IPSW metadata inspection (2026-11-10)
+
+### Confirmed target firmware identity
+- **Secondary-catalog observation, not a fresh device capture:** the catalog lists iPhone 16 / iPhone17,3 / iOS 18.3.2 / build 22D82, filename iPhone17,3_18.3.2_22D82_Restore.ipsw, and SHA-256 563605a932de2643bc4dcec6f312a0a0e9411cf07900a7187edb2669cb948247.
+- The same catalog reports this IPSW is no longer signed. This is a secondary-source observation, not a live Apple TSS query.
+- Source: https://ipsw.me/download/iPhone17%2C3/22D82/
+- **Safety decision:** do not attempt Restore, Update, downgrade, or firmware installation. The project only needs offline metadata inspection.
+
+### New project code
+- Added ipsw_inspect.py: opens an IPSW as a ZIP container, reads only the root BuildManifest.plist, checks target ProductType / ProductVersion / ProductBuildVersion, hashes the full IPSW and manifest, and optionally compares a caller-supplied SHA-256.
+- The inspector does not extract archive members, install firmware, connect to the phone, or change activation state.
+- It explicitly reports that Apple cryptographic signature verification and TSS signing-status checks are not performed. A self-consistent BuildManifest is not proof of publisher authenticity.
+- Added tests/test_ipsw_inspect.py for matching metadata, model mismatch, version/build mismatch, checksum comparison, and missing-manifest rejection.
+- Added a README command for offline use.
+- Commits: 8b1ad8fd5fbdb67899738184b7b0de954deb8502 (tool), 380dbcf8841022101685e4f9aae5232af6adbd7f (tests), 4c6f119864dd867a99fc3f371f59fba97c741f90 (README).
+
+### CI status
+- The preceding commit afd55a5d96068e484f912413d4b3d2e682c40472 passed GitHub Actions run 42832092029; all six Ubuntu/Windows × Python 3.10/3.11/3.12 jobs completed successfully.
+- The new IPSW inspector and its tests were added after that run. Their CI status is not yet established and must not be described as passing until a new run completes.
+
+### Remaining validation
+1. Run the new unit tests in GitHub Actions on the latest branch head.
+2. Review the inspector source and test results for cross-platform behavior.
+3. Only after CI succeeds, use the tool against a locally obtained IPSW file if the user already has one; do not ask for another device snapshot or repeat USB diagnostics.
+4. Continue the read-only activation architecture and researcher-material review. No exploitability claim is made.
