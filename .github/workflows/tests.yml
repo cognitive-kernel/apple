@@ -20,6 +20,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile Python files
-        run: python -m compileall -q diagnostics.py cve_scope.py tests
+        run: python -m compileall -q .
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
