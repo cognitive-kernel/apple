@@ -1,4 +1,4 @@
-"""Non-invasive applicability check for Apple's CVE-2025-43534 advisory.
+""""Non-invasive applicability check for Apple's CVE-2025-43534 advisory.
 
 This tool reads ProductType and ProductVersion from a connected device using
 ideviceinfo. It does not exercise the vulnerability or change device state.
@@ -23,11 +23,12 @@ KNOWN_MODELS = {
 }
 
 
-def parse_version(value: str) -> Optional[tuple[int, ...]]:
-    match = re.fullmatch(r"\s*(\d+(?:\.\d+){1,3})\s*", value or "")
+def parse_version(value: str) -> Optional[tuple[int, int, int]]:
+    match = re.fullmatch(r"\s*(\d+(?:\.\d+){1,2})\s*", value or "")
     if not match:
         return None
-    return tuple(int(part) for part in match.group(1).split("."))
+    parts = [int(part) for part in match.group(1).split(".")]
+    return tuple((parts + [0, 0])[:3])
 
 
 def assess(product_type: str, product_version: str) -> dict:
