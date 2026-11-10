@@ -11,6 +11,7 @@ for investigating an iPhone that is stuck at Activation Lock.
 | `cve_scope.py` | Checks device model/version against the published CVE-2025-43534 scope |
 | `target_assessment.py` | Combines vendor advisory applicability with published PoC test evidence; explicitly reports when no validated Activation Lock solution is demonstrated |
 | `ipsw_inspect.py` | Reads an IPSW BuildManifest.plist, hashes the archive, and compares model/version/build without extracting or installing firmware |
+| `activation_preflight.py` | Combines a privacy-minimized device snapshot and IPSW report to determine whether read-only inspection prerequisites are satisfied |
 | `snapshot_diff.py` | Compares two device snapshots and reports observed property changes |
 | `activation_snapshot.py` | Captures selected activation/baseband/SIM properties without collecting serial, UDID, or ECID |
 | `activation_log_analyzer.py` | Analyzes an already-captured iOS syslog offline and identifies activation-related evidence |
@@ -24,6 +25,7 @@ From the repository directory:
 ```powershell
 py -3 ipsw_inspect.py .\iPhone17,3_18.3.2_22D82_Restore.ipsw --output ipsw-report.json
 py -3 activation_snapshot.py --output activation-snapshot.json
+py -3 activation_preflight.py .\activation-snapshot.json .\ipsw-report.json --output activation-preflight.json
 py -3 target_assessment.py .\activation-snapshot.json --output target-assessment.json
 py -3 diagnostics.py --output iphone-diagnostics.json
 py -3 activation_log_analyzer.py .\activation-filtered.log --output activation-log-analysis.json
