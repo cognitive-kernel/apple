@@ -44,7 +44,13 @@ def read_key(executable: str, key: str, udid: str | None = None) -> dict[str, An
 def collect(executable: str | None = None, udid: str | None = None) -> dict[str, Any]:
     executable = executable or shutil.which("ideviceinfo")
     if not executable:
-        raise FileNotFoundError("ideviceinfo was not found on PATH")
+        root = Path(__file__).resolve().parent
+        candidates = (root / "tools" / "libimobiledevice" / "ideviceinfo.exe",
+                      root.parent / "tools" / "libimobiledevice" / "ideviceinfo.exe")
+        bundled = next((candidate for candidate in candidates if candidate.is_file()), None)
+        executable = str(bundled) if bundled else None
+    if not executable:
+        raise FileNotFoundError("ideviceinfo was not found on PATH or in the project tools directory")
     properties = {key: read_key(executable, key, udid) for key in SAFE_KEYS}
     return {
         "schema_version": 1,
