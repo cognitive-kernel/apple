@@ -25,7 +25,7 @@ def matching_ipsw_report():
         "expected_target": {
             "product_type": "iPhone17,3",
             "product_version": "18.3.2",
-            "build_version": "22D82",
+            "product_build_version": "22D82",
         },
         "checks": {"inspection_passed": True},
     }
