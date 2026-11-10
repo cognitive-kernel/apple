@@ -64,7 +64,7 @@ def analyze_text(text: str) -> dict[str, Any]:
         for match in re.finditer(r"HTTP[^\r\n]{0,40}\b([1-5]\d\d)\b", line, re.I)
     })
     has_success = counts["activation_success_marker"] > 0
-    ("activation_failure_marker", re.compile(r"activation.{0,100}(failed|failure|denied|rejected|not authorized|invalid)|HTTP.*[4-5]\d\d", re.I)),
+    has_failure = counts["activation_failure_marker"] > 0
     if http_codes:
         server_observation = "http_status_observed"
     elif has_success:
