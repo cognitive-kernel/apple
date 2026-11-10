@@ -172,3 +172,12 @@ Never convert an advisory match, USB pairing, AFC availability, a log keyword, o
 - The researcher's GitHub profile (https://github.com/iG0x72) showed three public repositories at review time; none was identified from the visible repository list as a published CVE-2025-43534 reproduction.
 - This is a **Researcher-claimed** description, not an independently reproduced exploit.
 - The bl_sbx artifact remains separate: the thematic overlap is noted, but no direct attribution or proof that it is the CVE implementation has been established.
+
+
+## 10. CI validation update (2026-11-10)
+
+- GitHub Actions run 42832998621 (run #53) was started for the branch head containing both new utilities.
+- All six matrix jobs completed the Python compilation and unit-test steps successfully. Five jobs were reported completed/success by the jobs endpoint; the Windows/Python 3.10 job log also shows the test step completed with **40 tests, OK**. Its job-level status was still displayed as in-progress during the final status poll, so the run-level conclusion should be rechecked before treating the entire workflow as fully completed.
+- The Windows/Python 3.10 job log includes the five IPSW inspector tests and reports 40 total tests passing.
+- Separate local focused verification passed all 10 tests for ipsw_inspect.py and activation_preflight.py.
+- This is GitHub Actions evidence, not a test performed against the physical iPhone or a real 8.8 GiB IPSW. No firmware file was downloaded, no restore was attempted, and the device was not modified.
