@@ -40,6 +40,11 @@ py -3 -m unittest discover -s tests -v
 Tests have been added for the current tools; run them after the development
 work is complete.
 
+## Research notes
+
+- `research/cve-2025-43534-attribution.md` records Apple's CVE attribution and separates vendor-confirmed facts from researcher statements.
+- `research/bl-sbx-compatibility.md` assesses the separate public PoC against the target device.
+
 ## Research boundaries
 
 The toolkit is intended to establish device state, transport health, advisory
